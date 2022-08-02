@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,9 +14,11 @@ import java.util.Map;
 @Data
 @NoArgsConstructor
 @Accessors(chain = true)
-public class RpcResponse implements Serializable {
+public class RpcResponse {
     private Integer code;
     private String message;
+
+    private Map<String, Class<?>> dataType = new HashMap<>();
     private Map<String, Object> data = new HashMap<>();
 
     public RpcResponse ok() {
@@ -33,6 +34,7 @@ public class RpcResponse implements Serializable {
     }
     public RpcResponse data(String key, Object val) {
         this.data.put(key, val);
+        this.dataType.put(key, val.getClass());
         return this;
     }
 }

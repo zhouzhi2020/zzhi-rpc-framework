@@ -3,14 +3,13 @@ package com.zzhi.vo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 
 /**
  * @author zzhi
  */
 @Data
 @NoArgsConstructor
-public class RpcRequest implements Serializable {
+public class RpcRequest {
     /**
      * 接口名称
      */

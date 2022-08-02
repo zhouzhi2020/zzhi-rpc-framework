@@ -3,8 +3,6 @@ package com.zzhi.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-
 /**
  * 用户
  *
@@ -13,7 +11,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
-public class User implements Serializable {
+public class User {
     /**
      * 用户id
      */

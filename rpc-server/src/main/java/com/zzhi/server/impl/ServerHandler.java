@@ -1,11 +1,8 @@
 package com.zzhi.server.impl;
 
 import com.zzhi.server.ServiceProvider;
-import com.zzhi.service.UserService;
-import com.zzhi.service.impl.UserServiceImpl;
 import com.zzhi.vo.RpcRequest;
 import com.zzhi.vo.RpcResponse;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.AllArgsConstructor;
@@ -13,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 服务器处理器
@@ -28,16 +23,16 @@ public class ServerHandler extends ChannelHandlerAdapter {
 
     private ServiceProvider serviceProvide;
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         log.info("接受到 message");
         log.info("===> {}", msg);
         RpcResponse response = getResponse((RpcRequest) msg);
 
-        ctx.channel().writeAndFlush(response);
+        ctx.writeAndFlush(response);
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("服务器 handler 层出错!");
         cause.printStackTrace();
         ctx.close();
@@ -54,7 +49,7 @@ public class ServerHandler extends ChannelHandlerAdapter {
 
         RpcResponse rpcResponse = new RpcResponse();
 
-        if(service == null) {
+        if (service == null) {
             log.error("服务器暂时不支持该接口");
             return rpcResponse.error();
         }

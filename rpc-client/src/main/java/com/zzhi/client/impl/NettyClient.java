@@ -1,20 +1,16 @@
 package com.zzhi.client.impl;
 
 import com.zzhi.client.Client;
+import com.zzhi.enums.SerializerType;
+import com.zzhi.serializer.Serializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
-import io.netty.channel.local.LocalAddress;
 import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.handler.codec.LengthFieldPrepender;
-import io.netty.handler.codec.serialization.ClassResolver;
-import io.netty.handler.codec.serialization.ObjectDecoder;
-import io.netty.handler.codec.serialization.ObjectEncoder;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 import com.zzhi.vo.RpcRequest;
@@ -28,8 +24,8 @@ import com.zzhi.vo.RpcResponse;
  */
 @Slf4j
 public class NettyClient implements Client {
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
     private static final Bootstrap BOOTSTRAP;
 
     static {
@@ -39,24 +35,18 @@ public class NettyClient implements Client {
                 .group(new NioEventLoopGroup())
                 .handler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
-                    protected void initChannel(NioSocketChannel ch) throws Exception {
+                    protected void initChannel(NioSocketChannel ch) {
                         ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast("lenBaseDec", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 6, 4, 0, 0));
                         pipeline.addLast(
-                                "dec1",
-                                new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
-                        pipeline.addLast("enc1", new LengthFieldPrepender(4));
-                        pipeline.addLast("enc2", new ObjectEncoder());
-                        pipeline.addLast("de2", new ObjectDecoder(new ClassResolver() {
-                            @Override
-                            public Class<?> resolve(String s) throws ClassNotFoundException {
-                                return Class.forName(s);
-                            }
-                        }));
-
+                                "dec",
+                                new NettyDecodeHandler());
+                        pipeline.addLast(
+                                "enc",
+                                new NettyEncodeHandler(
+                                        Serializer.getSerializerByCode(SerializerType.JSON_SERIALIZER.getType())));
                         //添加客户端处理器
                         pipeline.addLast("clientHandler", new NettyClientHandler());
-
-
                     }
                 });
     }
@@ -74,7 +64,7 @@ public class NettyClient implements Client {
             log.info("和服务器连接成功！");
             Channel channel = channelFuture.channel();
             channel.writeAndFlush(request);
-            ChannelFuture closeFuture = channel.closeFuture().sync();
+            channel.closeFuture().sync();
             AttributeKey<RpcResponse> attributeKey = AttributeKey.valueOf("RpcResponse");
             RpcResponse response = channel.attr(attributeKey).get();
             log.info("sendRequest 方法获得响应 ===> {}", response);

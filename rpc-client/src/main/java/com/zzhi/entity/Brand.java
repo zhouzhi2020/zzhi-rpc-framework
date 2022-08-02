@@ -3,7 +3,6 @@ package com.zzhi.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 
 /**
  * 品牌
@@ -13,7 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
-public class Brand implements Serializable {
+public class Brand {
     /**
      * id
      */
