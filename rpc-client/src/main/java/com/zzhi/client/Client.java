@@ -13,5 +13,5 @@ public interface Client {
      * @param request 请求
      * @return {@link RpcResponse}
      */
-    public RpcResponse sendRequest(RpcRequest request);
+    RpcResponse sendRequest(RpcRequest request);
 }

@@ -12,10 +12,10 @@ public interface Server {
      *
      * @param port 端口号
      */
-    public void start(int port);
+    void start(int port);
 
     /**
      * 停止服务器
      */
-    public void stop();
+    void stop();
 }

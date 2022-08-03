@@ -35,8 +35,8 @@ public class ClientProxy implements InvocationHandler {
         return response.getData().get("result");
     }
 
-    public <T>T getProxyInstance(Class<T> clazz) {
+    public <T> T getProxyInstance(Class<T> clazz) {
         Object obj = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, this);
-        return (T)obj;
+        return (T) obj;
     }
 }

@@ -4,6 +4,8 @@ import com.zzhi.client.impl.NettyClient;
 import com.zzhi.client.proxy.ClientProxy;
 import com.zzhi.entity.Brand;
 import com.zzhi.entity.User;
+import com.zzhi.registry.ServiceDiscovery;
+import com.zzhi.registry.zk.impl.ServiceDiscoveryImpl;
 import com.zzhi.service.BrandService;
 import com.zzhi.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ClientApplication {
     public static void main(String[] args) {
-        Client client = new NettyClient("127.0.0.1", 8899);
+        ServiceDiscovery serviceDiscovery = new ServiceDiscoveryImpl();
+        Client client = new NettyClient();
         ClientProxy clientProxy = new ClientProxy(client);
 
         UserService userService = clientProxy.getProxyInstance(UserService.class);

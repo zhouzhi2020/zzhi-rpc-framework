@@ -12,19 +12,19 @@ public interface UserService {
      * @param userId 用户id
      * @return {@link User}
      */
-    public User getUserById(Integer userId);
+    User getUserById(Integer userId);
 
     /**
      * 插入用户
      *
      * @param user 用户
      */
-    public void insertUser(User user);
+    void insertUser(User user);
 
     /**
      * 通过id删除用户
      *
      * @param userId 用户id
      */
-    public void deleteUserById(Integer userId);
+    void deleteUserById(Integer userId);
 }

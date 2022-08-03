@@ -2,6 +2,8 @@ package com.zzhi.client.impl;
 
 import com.zzhi.client.Client;
 import com.zzhi.enums.SerializerType;
+import com.zzhi.registry.ServiceDiscovery;
+import com.zzhi.registry.zk.impl.ServiceDiscoveryImpl;
 import com.zzhi.serializer.Serializer;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -16,6 +18,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.zzhi.vo.RpcRequest;
 import com.zzhi.vo.RpcResponse;
 
+import java.net.InetSocketAddress;
+
 /**
  * Netty客户端实现
  *
@@ -24,11 +28,11 @@ import com.zzhi.vo.RpcResponse;
  */
 @Slf4j
 public class NettyClient implements Client {
-    private final String host;
-    private final int port;
     private static final Bootstrap BOOTSTRAP;
+    private static final ServiceDiscovery SERVICE_DISCOVERY;
 
     static {
+        SERVICE_DISCOVERY = new ServiceDiscoveryImpl();
         log.info("开始初始化bootstrap");
         BOOTSTRAP = new Bootstrap()
                 .channel(NioSocketChannel.class)
@@ -51,16 +55,13 @@ public class NettyClient implements Client {
                 });
     }
 
-    public NettyClient(String host, int port) {
-        this.host = host;
-        this.port = port;
-    }
-
     @Override
     public RpcResponse sendRequest(RpcRequest request) {
+        String interfaceName = request.getInterfaceName();
+        InetSocketAddress inetSocketAddress = SERVICE_DISCOVERY.lookupService(interfaceName);
         log.info("开始发送 request");
         try {
-            ChannelFuture channelFuture = BOOTSTRAP.connect(host, port).sync();
+            ChannelFuture channelFuture = BOOTSTRAP.connect(inetSocketAddress).sync();
             log.info("和服务器连接成功！");
             Channel channel = channelFuture.channel();
             channel.writeAndFlush(request);

@@ -16,5 +16,5 @@ public interface BrandService {
      * @param id id
      * @return {@link Brand}
      */
-    public Brand getBrandById(Integer id);
+    Brand getBrandById(Integer id);
 }
