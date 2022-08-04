@@ -5,6 +5,7 @@ import com.zzhi.vo.RpcRequest;
 import com.zzhi.vo.RpcResponse;
 import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,15 +20,14 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 @AllArgsConstructor
-public class ServerHandler extends ChannelHandlerAdapter {
+public class ServerHandler extends SimpleChannelInboundHandler<RpcRequest> {
 
     private ServiceProvider serviceProvide;
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) {
+    protected void messageReceived(ChannelHandlerContext ctx, RpcRequest msg) throws Exception {
         log.info("接受到 message");
         log.info("===> {}", msg);
-        RpcResponse response = getResponse((RpcRequest) msg);
-
+        RpcResponse response = getResponse(msg);
         ctx.writeAndFlush(response);
     }
 
@@ -64,6 +64,5 @@ public class ServerHandler extends ChannelHandlerAdapter {
             e.printStackTrace();
             return rpcResponse.error();
         }
-
     }
 }

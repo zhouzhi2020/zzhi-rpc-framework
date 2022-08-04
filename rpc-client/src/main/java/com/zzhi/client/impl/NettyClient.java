@@ -48,7 +48,7 @@ public class NettyClient implements Client {
                         pipeline.addLast(
                                 "enc",
                                 new NettyEncodeHandler(
-                                        Serializer.getSerializerByCode(SerializerType.JSON_SERIALIZER.getType())));
+                                        Serializer.getSerializerByCode(SerializerType.KRYO_SERIALIZER.getType())));
                         //添加客户端处理器
                         pipeline.addLast("clientHandler", new NettyClientHandler());
                     }

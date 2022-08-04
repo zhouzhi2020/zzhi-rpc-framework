@@ -48,7 +48,7 @@ public class CuratorUtils {
             }
             zkClient.create()
                     .creatingParentsIfNeeded()
-                    .withMode(CreateMode.PERSISTENT)
+                    .withMode(CreateMode.EPHEMERAL)
                     .forPath(path);
             log.info("成功在 {} 中 添加 {} 服务地址", serviceName, inetSocketAddress);
         } catch (Exception e) {

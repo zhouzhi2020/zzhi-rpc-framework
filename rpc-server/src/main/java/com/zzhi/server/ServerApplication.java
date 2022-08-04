@@ -19,16 +19,17 @@ import java.net.InetSocketAddress;
 public class ServerApplication {
 
     public static void main(String[] args) {
+        int port = 8899;
         UserService userService = new UserServiceImpl();
         BrandService brandService = new BrandServiceImpl();
         //保存服务
-        ServiceProvider serviceProvider = new ServiceProvider(8899);
+        ServiceProvider serviceProvider = new ServiceProvider(port);
 
         serviceProvider.providerServiceInterface(userService);
         serviceProvider.providerServiceInterface(brandService);
 
         Server server = new NettyServer(serviceProvider);
 
-        server.start(8899);
+        server.start(port);
     }
 }

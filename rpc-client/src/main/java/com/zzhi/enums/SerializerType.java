@@ -22,6 +22,10 @@ public enum SerializerType {
      */
     JSON_SERIALIZER(1),
 
+    /**
+     * kryo序列化器
+     */
+    KRYO_SERIALIZER(2),
     UNKNOWN(-1);
 
     private final Integer type;
@@ -34,6 +38,9 @@ public enum SerializerType {
                 break;
             case 1:
                 serializerType = JSON_SERIALIZER;
+                break;
+            case 2:
+                serializerType = KRYO_SERIALIZER;
                 break;
             default:
                 serializerType = UNKNOWN;

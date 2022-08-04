@@ -51,7 +51,7 @@ public class NettyServer implements Server {
                         pipeline.addLast(
                                 "enc",
                                 new NettyEncodeHandler(
-                                        Serializer.getSerializerByCode(SerializerType.JSON_SERIALIZER.getType())));
+                                        Serializer.getSerializerByCode(SerializerType.KRYO_SERIALIZER.getType())));
                         pipeline.addLast("serverHandler", new ServerHandler(serviceProvide));
                     }
                 });

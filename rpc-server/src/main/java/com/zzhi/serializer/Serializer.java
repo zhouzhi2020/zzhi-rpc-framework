@@ -2,6 +2,7 @@ package com.zzhi.serializer;
 
 import com.zzhi.enums.SerializerType;
 import com.zzhi.serializer.impl.JsonSerializer;
+import com.zzhi.serializer.impl.KryoSerializer;
 import com.zzhi.serializer.impl.ObjectSerializer;
 
 /**
@@ -50,6 +51,8 @@ public interface Serializer {
                 return new ObjectSerializer();
             case JSON_SERIALIZER:
                 return new JsonSerializer();
+            case KRYO_SERIALIZER:
+                return new KryoSerializer();
             default:
                 return null;
         }

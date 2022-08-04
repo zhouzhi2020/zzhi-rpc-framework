@@ -51,6 +51,7 @@ public class NettyDecodeHandler extends ByteToMessageDecoder {
 
         Object obj = serializer.deserialize(bytes, messageType);
         log.info("解码后是 ===> {}", obj);
+        log.info("此时数据还可读吗？ {}", byteBuf.isReadable());
         list.add(obj);
     }
 }
